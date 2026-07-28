@@ -8,7 +8,7 @@ import { inngest, functions } from "./inngest/index.js";
 
 
 const app = express();
-const port=3000; 
+
 app.use(clerkMiddleware())
 
 await connectDB();//connecting to the database
@@ -25,4 +25,4 @@ app.get("/", (req, res) => {
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 
-app.listen(port,()=>console.log(`server is listenting at port ${port}`));
+
