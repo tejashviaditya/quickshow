@@ -26,3 +26,4 @@ app.use("/api/inngest", serve({ client: inngest, functions }));
 
 
 
+export default app;
