@@ -32,7 +32,8 @@ cloudinary	Uploads and stores images/videos in the cloud.
        When this event happens, run these tasks in the background." send email ,create profile etc
 
 
-
+        versel--> it is used to deploy the server,
+        https://quickshow-server1-h60qedk14-tj-aditya.vercel.app--this is the url of the server from the vercel
 
 
  mongo atlas--	Provides a cloud-hosted MongoDB service.
