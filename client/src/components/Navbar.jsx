@@ -1,67 +1,161 @@
-import React,{useState} from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets";
-import { LogIn, Menu, Search, X } from "lucide-react";
-import {useClerk, UserButton, useUser } from "@clerk/react";
-
-
+import { Menu, Search, X, Ticket, Heart } from "lucide-react";
+import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
+import { useAppContext } from "../context/AppContext";
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { user } = useUser();
+  const { openSignIn } = useClerk();
+  const { favoriteMovies } = useAppContext();
+  const location = useLocation();
 
-  const [isOpen,setIsOpen]=useState(false);
-  const {user}=useUser();
-  const {openSignIn}=useClerk()
-  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Movies", path: "/movies" },
+    { name: "My Bookings", path: "/my-bookings" },
+  ];
+
+  const isActive = (path) => {
+    if (path === "/") return location.pathname === "/";
+    return location.pathname.startsWith(path);
+  };
+
   return (
-    <div className="fixed top-0 left-0 z-50 w-full  p-5 justify-between flex items-center md:px-16 lg:px-36 ">
-      <Link to="/" className="max-md:flex-1">
-        <img src={assets.logo} alt="" className="w-36 h-auto" />
-      </Link>
+    <header className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${scrolled ? 'glass-nav py-3 shadow-2xl shadow-black/40' : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-5'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between">
+        
+        {/* Brand Logo */}
+        <Link to="/" className="flex items-center gap-2 group cursor-pointer">
+          <img src={assets.logo} alt="QuickShow" className="w-36 sm:w-40 h-auto transition-transform duration-300 group-hover:scale-105" />
+        </Link>
 
+        {/* Navigation Links (Desktop) */}
+        <nav className="hidden md:flex items-center gap-1 bg-white/5 backdrop-blur-xl border border-white/10 px-6 py-2 rounded-full shadow-inner">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => scrollTo(0, 0)}
+              className={`relative px-4 py-1.5 text-sm font-medium transition-all duration-300 rounded-full ${
+                isActive(link.path)
+                  ? 'text-white bg-gradient-to-r from-primary to-primary-dull shadow-md shadow-primary/30'
+                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+          {favoriteMovies && favoriteMovies.length > 0 && (
+            <Link
+              to="/favorite"
+              onClick={() => scrollTo(0, 0)}
+              className={`relative px-4 py-1.5 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1.5 ${
+                isActive("/favorite")
+                  ? 'text-white bg-gradient-to-r from-primary to-primary-dull shadow-md shadow-primary/30'
+                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              <Heart className="w-3.5 h-3.5 fill-current text-primary" />
+              Favorites ({favoriteMovies.length})
+            </Link>
+          )}
+        </nav>
+
+        {/* Actions & User Menu */}
+        <div className="flex items-center gap-4">
+          <Link to="/movies" className="hidden sm:flex items-center gap-2 p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition">
+            <Search className="w-5 h-5" />
+          </Link>
+
+          {!user ? (
+            <button
+              onClick={openSignIn}
+              className="glow-btn px-5 py-2 text-sm bg-gradient-to-r from-primary to-primary-dull hover:from-primary-dull hover:to-primary text-white font-medium rounded-full cursor-pointer shadow-lg shadow-primary/30 transition-all duration-300 active:scale-95"
+            >
+              Sign In
+            </button>
+          ) : (
+            <div className="p-0.5 rounded-full bg-gradient-to-r from-primary via-purple-500 to-primary p-[2px] shadow-md shadow-primary/20">
+              <UserButton />
+            </div>
+          )}
+
+          {/* Mobile Menu Trigger */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-xl bg-white/10 border border-white/10 text-gray-200 hover:text-white"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Drawer */}
       <div
-        className={`max-md:absolute max-md:top-0 max-md:left-0 max-md:font-medium
-                    max-md:text-lg z-50 flex flex-col md:flex-row items-center
-                     max-md:justify-center gap-8 md:px-8 py-3 max-md:h-screen
-                      md:rounded-full backdrop-blur bg-black/70 md:bg-white/10 md:border
-                      border-gray-300/20 overflow-hidden transition-[width] duration-300 ${isOpen ? 'max-md:w-full': 'max-md:w-0' } `}
+        className={`md:hidden fixed inset-0 z-40 bg-black/90 backdrop-blur-2xl transition-all duration-300 ${
+          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
       >
-        <X className="md:hidden absolute top-6 right-6 w-6 h-6 cursor-pointer" onClick={()=>setIsOpen(!isOpen)} />
-         {/* now for clickable link */}
-        <Link onClick={()=>{scrollTo(0,0);setIsOpen(false)}} to="/">Home</Link>
-        <Link onClick={()=>{scrollTo(0,0);setIsOpen(false)}} to="/movies">Movies</Link>
-        <Link onClick={()=>{scrollTo(0,0);setIsOpen(false)}} to="/">Theaters</Link>
-        <Link onClick={()=>{scrollTo(0,0);setIsOpen(false)}} to="/">Releases</Link>
-        <Link onClick={()=>{scrollTo(0,0);setIsOpen(false)}} to="/favorite">Favorites</Link>
+        <div className="flex flex-col items-center justify-center h-full gap-6 px-6">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-6 right-6 p-3 rounded-full bg-white/10 text-gray-300 hover:text-white"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          <Link
+            onClick={() => { scrollTo(0, 0); setIsOpen(false); }}
+            to="/"
+            className="text-2xl font-semibold text-gray-200 hover:text-primary transition"
+          >
+            Home
+          </Link>
+          <Link
+            onClick={() => { scrollTo(0, 0); setIsOpen(false); }}
+            to="/movies"
+            className="text-2xl font-semibold text-gray-200 hover:text-primary transition"
+          >
+            Movies
+          </Link>
+          <Link
+            onClick={() => { scrollTo(0, 0); setIsOpen(false); }}
+            to="/my-bookings"
+            className="text-2xl font-semibold text-gray-200 hover:text-primary transition flex items-center gap-2"
+          >
+            <Ticket className="w-5 h-5 text-primary" />
+            My Bookings
+          </Link>
+          {favoriteMovies && favoriteMovies.length > 0 && (
+            <Link
+              onClick={() => { scrollTo(0, 0); setIsOpen(false); }}
+              to="/favorite"
+              className="text-2xl font-semibold text-gray-200 hover:text-primary transition flex items-center gap-2"
+            >
+              <Heart className="w-5 h-5 text-primary fill-primary" />
+              Favorites ({favoriteMovies.length})
+            </Link>
+          )}
+        </div>
       </div>
-
-    {/* for search and button */}
-      <div className="flex items-center gap-8">
-        <Search className="max-md:hidden  w-8 h-8 cursor-pointer" />
-
-        {/* we r going to use clerk */}
-        {
-          !user ? (
-            <button onClick={openSignIn} className="px-4 py-1 sm:px-7 sm:py-2 bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer">
-          Login
-
-        </button>
-
-          ):(
-
-          <UserButton/>
-
-
-          )
-        }
-
-
-
-        
-      </div>
-
-      <Menu className="max-md:ml-4 md:hidden w-8 h-8 cursor-pointer " onClick={()=> setIsOpen(!isOpen)} /> 
-        
-    </div>
+    </header>
   );
 };
 

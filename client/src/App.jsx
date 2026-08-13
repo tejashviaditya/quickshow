@@ -1,28 +1,45 @@
-import React from 'react'
 import Navbar from './components/Navbar'
 import {Route, Routes, useLocation} from 'react-router-dom'
 import Home from './pages/Home'
 import Movies from './pages/Movies'
 import MoviesDetails from './pages/MovieDetails'
 import SeatLayout from './pages/SeatLayout'
-import MyBooking from './pages/Mybooking'
+import MyBooking from './pages/MyBooking'
 import Favorite from './pages/Favorite'
 import {Toaster } from 'react-hot-toast'
 import Footer from './components/Footer'
 import Layout from './pages/admin/Layout'
-import Dashboard from './pages/admin/Dashboard'
+import Dashboard from './pages/admin/DashBoard'
 import AddShows from './pages/admin/AddShows'
 import ListShows from './pages/admin/ListShows'
 import ListBookings from './pages/admin/ListBookings' 
+import { useAppContext } from './context/AppContext'
+import { SignIn } from '@clerk/clerk-react'
+
+
 
 
 
 function App() {
   const isAdminRoute = useLocation().pathname.startsWith('/admin') //means we r in admin dashboard--hide nav bar
+
+  const {user}=useAppContext()
+
   return (
     <>
     {/* notification */}
-    <Toaster/>
+    <Toaster
+      position="top-center"
+      toastOptions={{
+        style: {
+          background: '#181A26',
+          color: '#F3F4F6',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '12px',
+          fontSize: '14px',
+        },
+      }}
+    />
 
     {/* hosing nav in addmit dashboard */}
     {!isAdminRoute && <Navbar />} 
@@ -34,7 +51,11 @@ function App() {
         <Route path='/movies/:id/:date' element={<SeatLayout />} />
         <Route path='/my-bookings' element={<MyBooking />} />
         <Route path='/favorite' element = {<Favorite/>} />
-        < Route path="/admin/*" element={<Layout/>}>
+        < Route path="/admin/*" element={user ? <Layout/>:(
+          <div className="min-h-screen flex justify-center items-center">
+            <SignIn fallbackRedirectUrl={'/admin'}/>
+          </div>
+        ) }>
           <Route index element={<Dashboard/>} />
           <Route path="add-shows" element={<AddShows/>} />
           <Route path="list-shows" element={<ListShows/>} />

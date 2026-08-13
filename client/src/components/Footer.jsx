@@ -1,25 +1,23 @@
-import React from "react";
-import {assets} from "../assets/assets";
+import { assets } from "../assets/assets";
 
 const Footer = () => {
   return (
     <footer className="px-6 mt-40 md:px-16 lg:px-36 w-full text-gray-300">
       <div className="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500 pb-14">
         <div className="md:max-w-96">
-          <img alt="" className="h-11" src={assets.logo} />
+          <img alt="QuickShow Logo" className="h-11" src={assets.logo} />
           <p className="mt-6 text-sm">
-            Lorem Ipsum has been the industry's standard dummy text ever since
-            the 1500s, when an unknown printer took a galley of type and
-            scrambled it to make a type specimen book.
+            QuickShow is your ultimate movie ticket booking platform. Book your favorite movies, explore showtimes, and enjoy seamless entertainment experiences.
           </p>
           <div className="flex items-center gap-2 mt-4">
             <img
               src={assets.googlePlay}
+              alt="Google Play Store"
               className="h-9 w-auto "
             />
             <img
               src={assets.appStore}
-              alt="app store"
+              alt="Apple App Store"
               className="h-9 w-auto "
             />
           </div>
@@ -29,10 +27,10 @@ const Footer = () => {
             <h2 className="font-semibold mb-5">Company</h2>
             <ul className="text-sm space-y-2">
               <li>
-                <a href="#">Home</a>
+                <a href="/">Home</a>
               </li>
               <li>
-                <a href="#">About us</a>
+                <a href="/movies">Movies</a>
               </li>
               <li>
                 <a href="#">Contact us</a>
@@ -46,14 +44,13 @@ const Footer = () => {
             <h2 className="font-semibold mb-5">Get in touch</h2>
             <div className="text-sm space-y-2">
               <p>+1-234-567-890</p>
-              <p>contact@example.com</p>
+              <p>contact@quickshow.com</p>
             </div>
           </div>
         </div>
       </div>
       <p className="pt-4 text-center text-sm pb-5">
-        Copyright {new Date().getFullYear()} © {" "}
-        <a href="https://prebuiltui.com"></a>GreatStack.All Right Reserved.
+        Copyright {new Date().getFullYear()} © QuickShow. All Rights Reserved.
       </p>
     </footer>
   );

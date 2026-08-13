@@ -1,4 +1,3 @@
-import React from "react";
 import { assets } from "../../assets/assets";
 import {
   LayoutDashboardIcon,
@@ -6,7 +5,7 @@ import {
   ListIcon,
   ListCollapseIcon,
 } from "lucide-react";
-import { NavLink } from "react-router-dom"; // it know wheter the current route is active or not if active-true
+import { NavLink } from "react-router-dom";
 
 
 
@@ -16,7 +15,7 @@ const AdminSidebar = () => {
     lastName: "User",
     imageUrl: assets.profile,
   };
-  const adminNavLinks = [ // links for admin dashboard
+  const adminNavLinks = [
     { name: "Dashboard", path: "/admin", icon: LayoutDashboardIcon },
     { name: "Add Shows", path: "/admin/add-shows", icon: PlusSquareIcon },
     { name: "List Shows", path: "/admin/list-shows", icon: ListIcon },
@@ -37,16 +36,15 @@ const AdminSidebar = () => {
           <NavLink
             key={index}
             to={link.path}
-            className={({isActive})=>` relative flex items-center max-md:justify-center gap-2 w-full md:pl-10 first:mt-6 text-gray-400 py-2.5  ${ isActive && 'bg-primary/15 text-primary group '}`}>
-            {({isActive}) =>(
+            end={link.path === "/admin"}
+            className={({ isActive }) => ` relative flex items-center max-md:justify-center gap-2 w-full md:pl-10 first:mt-6 text-gray-400 py-2.5  ${isActive ? 'bg-primary/15 text-primary group ' : ''}`}>
+            {({ isActive }) => (
               <>
-              <link.icon className="w-5 h-5" />
-              <p className="max-md:hidden ">{link.name}</p>
-              <span className={`w-1.5 h-10 rounded-l right-0 absolute ${ isActive && 'bg-primary/50'}`} />
-
+                <link.icon className="w-5 h-5" />
+                <p className="max-md:hidden ">{link.name}</p>
+                <span className={`w-1.5 h-10 rounded-l right-0 absolute ${isActive ? 'bg-primary/50' : ''}`} />
               </>
-            )
-            }
+            )}
           </NavLink>
         ))}
       </div>
