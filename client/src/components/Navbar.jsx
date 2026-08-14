@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets";
-import { Menu, Search, X, Ticket, Heart } from "lucide-react";
+import { Menu, Search, X, Ticket, Heart, ShieldCheck } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { useAppContext } from "../context/AppContext";
 
@@ -75,6 +75,18 @@ const Navbar = () => {
               Favorites ({favoriteMovies.length})
             </Link>
           )}
+          <Link
+            to="/admin"
+            onClick={() => scrollTo(0, 0)}
+            className={`relative px-4 py-1.5 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1.5 ${
+              isActive("/admin")
+                ? 'text-white bg-gradient-to-r from-primary to-primary-dull shadow-md shadow-primary/30'
+                : 'text-gray-400 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+            Admin
+          </Link>
         </nav>
 
         {/* Actions & User Menu */}
@@ -153,6 +165,14 @@ const Navbar = () => {
               Favorites ({favoriteMovies.length})
             </Link>
           )}
+          <Link
+            onClick={() => { scrollTo(0, 0); setIsOpen(false); }}
+            to="/admin"
+            className="text-2xl font-semibold text-gray-400 hover:text-primary transition flex items-center gap-2"
+          >
+            <ShieldCheck className="w-5 h-5 text-primary" />
+            Admin
+          </Link>
         </div>
       </div>
     </header>
