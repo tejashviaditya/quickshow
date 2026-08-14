@@ -23,8 +23,8 @@ await connectDB();
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:4173",
-    process.env.FRONTEND_URL, // set this on Render to your Vercel URL
-].filter(Boolean); // remove undefined if FRONTEND_URL is not set
+    process.env.FRONTEND_URL, // set this on Render: https://quickshow-bice-mu.vercel.app
+].filter(Boolean);
 
 app.use(cors({
     origin: (origin, callback) => {
@@ -32,7 +32,8 @@ app.use(cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error(`CORS: origin ${origin} not allowed`));
+            // Return false → CORS sends 403, not a server 500
+            callback(null, false);
         }
     },
     credentials: true,
