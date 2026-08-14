@@ -23,17 +23,18 @@ await connectDB();
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:4173",
-    process.env.FRONTEND_URL, // set this on Render: https://quickshow-bice-mu.vercel.app
+    "https://quickshow-bice-mu.vercel.app",
+    process.env.FRONTEND_URL, // optional override via Render env var
 ].filter(Boolean);
 
 app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (Postman, server-to-server)
-        if (!origin || allowedOrigins.includes(origin)) {
+        // Also allow any *.vercel.app preview deployment of this project
+        if (!origin || allowedOrigins.includes(origin) || /^https:\/\/quickshow.*\.vercel\.app$/.test(origin)) {
             callback(null, true);
         } else {
-            // Return false → CORS sends 403, not a server 500
-            callback(null, false);
+            callback(null, false); // 403, not 500
         }
     },
     credentials: true,
