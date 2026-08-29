@@ -4,10 +4,12 @@ import { assets } from "../assets/assets";
 import { Menu, Search, X, Ticket, Heart, ShieldCheck } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { useAppContext } from "../context/AppContext";
+import AdminLoginModal from "./AdminLoginModal";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const { user } = useUser();
   const { openSignIn } = useClerk();
   const { favoriteMovies } = useAppContext();
@@ -37,6 +39,7 @@ const Navbar = () => {
   };
 
   return (
+    <>
     <header className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${scrolled ? 'glass-nav py-3 shadow-2xl shadow-black/40' : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-5'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between">
         
@@ -75,9 +78,9 @@ const Navbar = () => {
               Favorites ({favoriteMovies.length})
             </Link>
           )}
-          <Link
-            to="/admin"
-            onClick={() => scrollTo(0, 0)}
+          <button
+            id="nav-admin-btn"
+            onClick={() => setIsAdminModalOpen(true)}
             className={`relative px-4 py-1.5 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1.5 ${
               isActive("/admin")
                 ? 'text-white bg-gradient-to-r from-primary to-primary-dull shadow-md shadow-primary/30'
@@ -86,7 +89,7 @@ const Navbar = () => {
           >
             <ShieldCheck className="w-3.5 h-3.5 text-primary" />
             Admin
-          </Link>
+          </button>
         </nav>
 
         {/* Actions & User Menu */}
@@ -165,17 +168,23 @@ const Navbar = () => {
               Favorites ({favoriteMovies.length})
             </Link>
           )}
-          <Link
-            onClick={() => { scrollTo(0, 0); setIsOpen(false); }}
-            to="/admin"
+          <button
+            id="nav-admin-btn-mobile"
+            onClick={() => { setIsOpen(false); setIsAdminModalOpen(true); }}
             className="text-2xl font-semibold text-gray-400 hover:text-primary transition flex items-center gap-2"
           >
             <ShieldCheck className="w-5 h-5 text-primary" />
             Admin
-          </Link>
+          </button>
         </div>
       </div>
     </header>
+
+    <AdminLoginModal
+      isOpen={isAdminModalOpen}
+      onClose={() => setIsAdminModalOpen(false)}
+    />
+    </>
   );
 };
 

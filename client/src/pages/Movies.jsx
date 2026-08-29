@@ -1,12 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MovieCard from '../components/MovieCard';
 import BlurCircle from '../components/BlurCircle';
 import { useAppContext } from '../context/AppContext';
 import { Film, Clapperboard, Sparkles } from 'lucide-react';
 
 const Movies = () => {
-  const { shows } = useAppContext();
+  const { shows, fetchShows } = useAppContext();
   const [selectedGenre, setSelectedGenre] = useState('All');
+
+  // Always fetch fresh shows when this page is visited
+  useEffect(() => {
+    fetchShows();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   const genres = ['All', 'Action', 'Adventure', 'Sci-Fi', 'Fantasy', 'Horror', 'Comedy'];
 

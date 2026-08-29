@@ -100,7 +100,7 @@ export const AppProvider = ({ children }) => {  //provider is used to provide da
         ,user,
         getToken
         ,navigate
-        ,isAdmin,shows,favoriteMovies,fetchFavoriteMovies,image_base_url
+        ,isAdmin,shows,fetchShows,favoriteMovies,fetchFavoriteMovies,image_base_url
 
 
     }
